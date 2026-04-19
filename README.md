@@ -93,26 +93,26 @@
 
 ```bash
 termux-setup-storage
-```bash
+```
 ```bash
 apt update && apt upgrade && pkg install -y git nodejs ffmpeg imagemagick yarn
-
+```
 
 ```bash
 git clone https://github.com/Loydsumer/NAGUMO-BOT && cd NAGUMO-BOT
-
+```
 
 ```bash
 yarn install
-
+```
 
 ```bash
 npm install
-
+```
 
 ```bash
 npm update
-
+```
 
 ```bash
 npm start
