@@ -24,6 +24,8 @@ import chalk from 'chalk'
 
 import syntaxerror from 'syntax-error'
 
+import fs from 'fs'
+
 import {tmpdir} from 'os'
 
 import {format} from 'util'
@@ -83,6 +85,13 @@ const __dirname = global.__dirname(import.meta.url)
 global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
 
 global.prefix = new RegExp('^[' + (opts['prefix'] || '‎z/#$%.\\-').replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
+
+
+// إنشاء مجلدات الداتا إذا مو موجودة
+const dbDir = './storage/databases'
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true })
+}
 
 global.db = new Low(new JSONFile(`storage/databases/database.json`))
 
