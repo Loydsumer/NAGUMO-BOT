@@ -1,97 +1,75 @@
 import fs from 'fs';
-import pathModule from 'path';
+import { fileTypeFromBuffer } from 'file-type';
 
-const handler = async (m, { conn, text, usedPrefix, command }) => {
-  // التحقق من أن المرسل أونر من القائمة العالمية
-  const isOwner = global.owner.some(o => o[0] === m.sender.split('@')[0]);
-  if (!isOwner) return m.reply('ماذا حلمت أيضاً يا عبد🐦');
-
-  if (!text) return m.reply(`*⚠️ يرجى إدخال اسم الملف بعد الأمر*\n\n*مثال:* ${usedPrefix + command} test`);
-
-  // إعداد الـ Fake Status للقناة
-  const fakeStatus = {
-    key: { fromMe: false, participant: '0@s.whatsapp.net', remoteJid: 'status@broadcast' },
-    message: {
-        extendedTextMessage: {
-            text: "📂 نظام إدارة الملفات البرمجي",
-            contextInfo: {
-                isForwarded: true,
-                forwardingScore: 999,
-                forwardedNewsletterMessageInfo: {
-                    newsletterJid: '120363402804601196@newsletter',
-                    newsletterName: '𓏲ׄ 𝐋𝐎𝐘𝐃⏤͟͟͞͞🪻 ָ ۫𝐒𝐎𝐋𝐎 ࣪𖥔',
-                    serverMessageId: 127
-                }
-            }
-        }
-    }
-  };
+const handler = async (m, { text, usedPrefix, command }) => {
+  if (!text) throw `〘 ❗ 〙 يرجى إدخال اسم الملف`;
 
   const q = m.quoted || m;
-  const mime = (q.msg || q).mimetype || '';
-  const isTextMessage = q.text || "";
-
-  const pluginsDir = 'plugins';
-  if (!fs.existsSync(pluginsDir)) fs.mkdirSync(pluginsDir, { recursive: true });
-
-  const filePath = pathModule.join(pluginsDir, `${text}.js`);
+  const mime = q.mimetype || '';
+  const isTextMessage = q.text;
+  const path = `plugins/${text}.js`;
   let isAdd = false;
   let isDel = false;
 
-  try {
-    switch (command) {
-      case 'احفظ':
-        if (!q || (!isTextMessage && !mime)) {
-          throw `يرجى الرد على رسالة نصية أو ملف JS ليتم حفظه`;
-        }
+  let fileContent = '';
 
+  switch (command) {
+    case 'احفظ':
+      if (!q || (!isTextMessage && !mime)) {
+        throw `〘 ❗ 〙 يرجى الرد على رسالة نصية أو مستند ليتم حفظه كملف`;
+      }
+
+      try {
         if (isTextMessage) {
-          const content = isTextMessage.trim();
-          if (!content) throw `النص المستلم فارغ.`;
-          fs.writeFileSync(filePath, content, 'utf8');
+          fileContent = isTextMessage.trim();
+          if (!fileContent) throw `〘 ❗ 〙 النص المستلم فارغ.`;
+          fs.writeFileSync(path, fileContent, 'utf8');
           isAdd = true;
-        } else if (q.download) {
+        } else if (mime === 'application/javascript') {
           const buffer = await q.download();
-          const content = buffer.toString('utf8');
-          if (!content.trim()) throw `الملف المرفق فارغ.`;
-          fs.writeFileSync(filePath, content, 'utf8');
+          fileContent = buffer.toString('utf8');
+          if (!fileContent.trim()) throw `〘 ❗ 〙 الملف المرفق فارغ أو لا يحتوي على نصوص صالحة.`;
+          fs.writeFileSync(path, fileContent, 'utf8');
           isAdd = true;
+        } else {
+          throw `〘 ❗ 〙 الملف المرفق غير مدعوم.`;
         }
-        break;
+      } catch (error) {
+        throw `〘 ❗ 〙 حدث خطأ أثناء حفظ الملف: ${error.message || error}`;
+      }
+      break;
 
-      case 'امسح':
-        if (!fs.existsSync(filePath)) {
-          throw `الملف "${text}.js" غير موجود أصلاً لحذفه`;
-        }
-        fs.unlinkSync(filePath);
+    case 'امسح':
+      if (!fs.existsSync(path)) {
+        throw `〘 ❗ 〙 الملف "${path}" غير موجود لحذفه`;
+      }
+
+      try {
+        fs.unlinkSync(path);
         isDel = true;
-        break;
-    }
+      } catch (error) {
+        throw `〘 ❗ 〙 حدث خطأ أثناء حذف الملف: ${error.message || error}`;
+      }
+      break;
 
-    if (isAdd) {
-      let addMsg = `*╭─⬣「 ✅ تـم الـحـفـظ 」⬣─╮*\n\n` +
-                   `> *❑┊•≫ 📂 الملف:* ${text}.js\n` +
-                   `> *❑┊•≫ 📍 المسار:* plugins/\n\n` +
-                   `~*『✦▬▬▬✦┇• 🪻 •┇✦▬▬▬✦』*~\n` +
-                   `> *تم حفظ الكود بنجاح يحب🐦*`;
-      await conn.sendMessage(m.chat, { text: addMsg }, { quoted: fakeStatus });
-    } else if (isDel) {
-      let delMsg = `*╭─⬣「 ✅ تـم الـحـذف 」⬣─╮*\n\n` +
-                   `> *❑┊•≫ 📂 الملف:* ${text}.js\n` +
-                   `> *❑┊•≫ 📍 الحالة:* تم الإزالة\n\n` +
-                   `~*『✦▬▬▬✦┇• 🪻 •┇✦▬▬▬✦』*~\n` +
-                   `> *تم حذف الملف من السيرفر بنجاح يحب🐦*`;
-      await conn.sendMessage(m.chat, { text: delMsg }, { quoted: fakeStatus });
-    }
+    default:
+      throw `〘 ❗ 〙 الأمر غير معروف
+      استخدم أحد الأوامر التالية:
+      - ${usedPrefix}احفظ
+      - ${usedPrefix}امسح`;
+  }
 
-  } catch (error) {
-    m.reply(`❌ *حدث خطأ:* ${error.message || error}`);
+
+  if (isAdd) {
+    m.reply(`〘 ✅ 〙 تم حفظ الملف بنجاح: "${path}"`);
+  } else if (isDel) {
+    m.reply(`〘 ✅ 〙 تم حذف الملف بنجاح: "${path}"`);
   }
 };
 
 handler.help = ['احفظ', 'امسح'];
 handler.tags = ['owner'];
-handler.command = /^(احفظ|امسح)$/i;
-handler.rowner = true;
+handler.command = ['احفظ', 'امسح'];
+handler.owner = true;
 
 export default handler;
