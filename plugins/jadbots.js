@@ -55,7 +55,7 @@ let handler = async (m, { conn, args, usedPrefix, command, isOwner, text }) => {
     if (conn.user.jid === m.sender) return
     let who = m.mentionedJid && m.mentionedJid[0] ? m.mentionedJid[0] : m.fromMe ? conn.user.jid : m.sender
     let id = `${text ? text.replace(/\D/g, '') : who.split`@`[0]}`
-    let pathGataJadiBot = path.join('./cheonbots/', id)
+    let pathGataJadiBot = path.join('./jadibts/', id)
     if (!fs.existsSync(pathGataJadiBot)) {
         fs.mkdirSync(pathGataJadiBot, { recursive: true })
     }
@@ -79,7 +79,7 @@ export async function gataJadiBot(options, text) {
     // معالجة أمر تنصيب
     // ═══════════════════════════════════════
     if (command === 'تنصيب') {
-        command = 'cheonbots'
+        command = 'jadibot'
         if (!args.includes('تنصيب') && !args.includes('--تنصيب')) {
             args.unshift('--تنصيب')
         }
@@ -125,7 +125,7 @@ export async function gataJadiBot(options, text) {
         },
         msgRetry,
         msgRetryCache,
-        browser: mcode ? ['Windows', 'Chrome', '110.0.5585.95'] : ['cheonbots', 'Chrome', '2.0.0'],
+        browser: mcode ? ['Windows', 'Chrome', '110.0.5585.95'] : ['GataBot-MD (Sub Bot)', 'Chrome', '2.0.0'],
         version: version,
         generateHighQualityLinkPreview: true
     }
@@ -166,7 +166,7 @@ export async function gataJadiBot(options, text) {
             if (!m.isWABusiness) {
                 if (/web|desktop|unknown/i.test(dispositivo)) {
                     txtCode = await conn.sendMessage(m.chat, {
-                        image: { url: 'https://files.catbox.moe/bo0swt.jpg' },
+                        image: { url: 'https://s7.ezgif.com/tmp/ezgif-7905c1c9baa94fbc.jpg' },
                         caption: rtx2.trim() + '\n'
                     }, { quoted: m })
                     codeBot = await m.reply(secret)
@@ -175,7 +175,7 @@ export async function gataJadiBot(options, text) {
                         m.chat,
                         rtx2.trim(),
                         global.wm + `\n*الــكــود 🌺:* ${secret}`,
-                        'https://files.catbox.moe/bo0swt.jpg',
+                        'https://files.catbox.moe/azc9kk.jpg',
                         null,
                         [['🫐 نـسـخ الـكـود 🫐', secret]],
                         null, null, m
@@ -183,7 +183,7 @@ export async function gataJadiBot(options, text) {
                 }
             } else {
                 txtCode = await conn.sendMessage(m.chat, {
-                    image: { url: 'https://files.catbox.moe/bo0swt.jpg' },
+                    image: { url: 'https://h.uguu.se/GUHtpVKY.jpg' },
                     caption: rtx2.trim() + '\n'
                 }, { quoted: m })
                 codeBot = await m.reply(secret)
@@ -319,8 +319,8 @@ export async function gataJadiBot(options, text) {
                         forwardingScore: 999,
                         isForwarded: true,
                         forwardedNewsletterMessageInfo: {
-                            newsletterJid: '120363377374711810@newsletter',
-                            newsletterName: '𝐂𝐇𝐄𝐎𝐍 𝐁𝐎𝐓',
+                            newsletterJid: '120363404349859805@newsletter',
+                            newsletterName: '𝐂𝐇𝐄𝐎𝐍 𝐁𝐎𝐓 Bot',
                             serverMessageId: -1
                         }
                     }
@@ -420,7 +420,7 @@ async function joinChannels(conn) {
 // فحص وإعادة تشغيل البوتات الفرعية كل 30 دقيقة
 // ═══════════════════════════════════════
 async function checkSubBots() {
-    const subBotDir = path.resolve('./cheonbots')
+    const subBotDir = path.resolve('./jadibts')
     if (!fs.existsSync(subBotDir)) return
 
     const folders = fs.readdirSync(subBotDir)
@@ -452,7 +452,7 @@ async function checkSubBots() {
                     conn: global.conn,
                     args: [],
                     usedPrefix: '.',
-                    command: 'cheonbots',
+                    command: 'jadibot',
                     fromCommand: false
                 })
                 retryMap.delete(folder)
