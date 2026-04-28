@@ -1,0 +1,65 @@
+{
+  "name": "cheon-bot",
+  "version": "2.0.0",
+  "description": "𝐂𝐇𝐄𝐎𝐍 𝐁𝐎𝐓 - by 𝐋𝐎𝐘𝐃",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "lib": "lib",
+    "plugins": "plugins"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "qr": "node index.js qr",
+    "code": "node index.js code"
+  },
+  "author": "LOYD",
+  "license": "MIT",
+  "dependencies": {
+    "@hapi/boom": "^10.0.1",
+    "@vitalets/google-translate-api": "^9.2.1",
+    "@whiskeysockets/baileys": "github:Loydsumer/baileys-speed",
+    "aki-api": "^5.0.0",
+    "archiver": "^7.0.1",
+    "awesome-phonenumber": "^3.4.0",
+    "axios": "^1.13.5",
+    "cfonts": "^3.3.1",
+    "chalk": "^5.6.2",
+    "cheerio": "^1.2.0",
+    "discord.js": "^14.26.2",
+    "elevenlabs": "^1.56.0",
+    "ffmpeg-static": "^5.2.0",
+    "file-type": "^21.3.0",
+    "fits-api": "0.2.0",
+    "fluent-ffmpeg": "^2.1.2",
+    "form-data": "^4.0.5",
+    "formdata-node": "^6.0.3",
+    "google-libphonenumber": "^3.2.44",
+    "jimp": "^0.16.13",
+    "jszip": "^3.10.1",
+    "lodash": "^4.17.23",
+    "lowdb": "^3.0.0",
+    "node-cache": "^5.1.2",
+    "node-fetch": "^3.3.2",
+    "node-webpmux": "^3.1.7",
+    "pdfkit": "^0.13.0",
+    "pino": "^8.16.2",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.34.5",
+    "soundcloud-downloader": "^1.0.0",
+    "syntax-error": "^1.4.0",
+    "together-ai": "^0.13.0",
+    "url-regex-safe": "^4.0.0",
+    "ws": "^8.19.0",
+    "yargs": "^18.0.0",
+    "yt-dlp-wrap": "^2.3.12",
+    "yt-search": "^2.13.1"
+  },
+  "optionalDependencies": {
+    "moment-timezone": "^0.6.0",
+    "wa-sticker-formatter": "^4.4.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
